@@ -1,0 +1,20 @@
+<! DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> Client</title>
+    </head>
+
+    <body>
+        <script>
+            const ws = new WebSocket("ws://localhost:3000")
+
+            // when connected
+            ws.onopen = () => console.log("connected to the websocket server")
+
+            // when there is an incoming message
+            ws.onmessage = (msg) => console.log("message from the server: ", msg.data)
+
+        </script>
+    </body>
