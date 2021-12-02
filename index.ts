@@ -1,3 +1,4 @@
+import { count } from 'console';
 import express from 'express';
 import WebSocket from 'ws';
 
@@ -16,14 +17,18 @@ const  webServer = new WebSocket.Server( {
     path: "/"
 })
 
+var alphas:WebSocket[] = []; 
+
 webServer.on("connection", (w) =>{
     console.log("someone connected")
     w.on('message', (msg)=>{
         console.log("got message: ", msg.toString())
+        alphas.push(w);
         //sending back the message to the client
         w.send(msg.toString())
         console.log("got message: ", msg.toString())
         w.send(msg.toString())
+        console.log("got message: ", alphas.length.toString())
     })
 })
         

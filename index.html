@@ -7,13 +7,51 @@
     </head>
 
     <body>
+        <form >
+            <label for="fname">Name:</label>
+            <input   id="fname" type="text" name="fname" value ="al" >
+            
+            <br><br>
+            <label for="lname">Locale</label>
+
+            <select name = "dropdown" id="locale">
+                <option value = "English" selected>English</option>
+                <option value = "German">German</option>
+                <option value = "Spanish">Spanish</option>
+             </select>
+             <br><br>
+
+            <input id="sendConnection" type="submit" value="Submit">
+          </form> 
         <script>
+
+            function sendConnection(ws){
+                        
+                        var name = document.getElementById("fname").value
+                        var select = document.getElementById("locale")
+                        var locale = select.options[select.selectedIndex].value
+                        
+                        if (name){
+                            console.log(name + locale)
+                        ws.send(name +':'+locale)
+                        }else{
+                            ws.send("noData");
+                        }
+            
+                    }
+
             const ws = new WebSocket("ws://localhost:3000")
+            ws.onopen = () => document.getElementById("sendConnection").onclick = sendConnection(ws)
+            
+            //document.getElementById("sendConnection").onclick = sendConnection(ws)
+
+
+            
 
             // when connected
-            ws.onopen = () => console.log("connected to the websocket server")
-
+            
             // when there is an incoming message
+            
             ws.onmessage = (msg) => console.log("message from the server: ", msg.data)
 
         </script>
