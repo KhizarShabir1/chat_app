@@ -1,4 +1,4 @@
-<! DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
     <head>
@@ -8,51 +8,47 @@
 
     <body>
         <form >
-            <label for="fname">Name:</label>
-            <input   id="fname" type="text" name="fname" value ="al" >
+            <label for="fname">Name: </label>
+            <input   id="fname" type="text" name="fname" value="John" >
             
             <br><br>
-            <label for="lname">Locale</label>
+            <label for="lname">Locale: </label>
 
             <select name = "dropdown" id="locale">
-                <option value = "English" selected>English</option>
-                <option value = "German">German</option>
+                <option value = "English" >English</option>
+                <option value = "German" selected>German</option>
                 <option value = "Spanish">Spanish</option>
+
              </select>
+
              <br><br>
 
-            <input id="sendConnection" type="submit" value="Submit">
+
+            <button type="button" onclick="myFunction()">Submit</button>
           </form> 
+          
         <script>
+            const ws = new WebSocket("ws://localhost:3000")
+
+            function myFunction() {
+                sendConnection(ws)
+            }
 
             function sendConnection(ws){
-                        
                         var name = document.getElementById("fname").value
                         var select = document.getElementById("locale")
                         var locale = select.options[select.selectedIndex].value
-                        
-                        if (name){
-                            console.log(name + locale)
+                        console.log(name + locale)
                         ws.send(name +':'+locale)
-                        }else{
-                            ws.send("noData");
-                        }
-            
                     }
-
-            const ws = new WebSocket("ws://localhost:3000")
+            
             ws.onopen = () => document.getElementById("sendConnection").onclick = sendConnection(ws)
             
             //document.getElementById("sendConnection").onclick = sendConnection(ws)
-
-
-            
-
-            // when connected
-            
             // when there is an incoming message
             
             ws.onmessage = (msg) => console.log("message from the server: ", msg.data)
 
         </script>
     </body>
+    </html>

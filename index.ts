@@ -27,7 +27,7 @@ webServer.on("connection", (w) =>{
         //sending back the message to the client
         w.send(msg.toString())
         console.log("got message: ", msg.toString())
-        w.send(msg.toString())
+
         console.log("got message: ", alphas.length.toString())
     })
 })
