@@ -17,18 +17,36 @@ const  webServer = new WebSocket.Server( {
     path: "/"
 })
 
-var alphas:WebSocket[] = []; 
+var connections:WebSocket[] = []; 
+var names:String[] = [];
+var names:String[] = [];
+var locales:String[] = [];
 
 webServer.on("connection", (w) =>{
     console.log("someone connected")
     w.on('message', (msg)=>{
-        console.log("got message: ", msg.toString())
-        alphas.push(w);
-        //sending back the message to the client
-        w.send(msg.toString())
-        console.log("got message: ", msg.toString())
+        
+        var splittedMessage = msg.toString().split(":")
+        if (splittedMessage[0]== "connection"){
+            connections.push(w);
+            names.push(splittedMessage[1])
+            locales.push(splittedMessage[2])
+            console.log("got connection: ", msg.toString())
+            console.log("Number of connection now: ", connections.length.toString())
+        }
+        if (splittedMessage[0]== "message"){
 
-        console.log("got message: ", alphas.length.toString())
+            console.log("got message: ", msg.toString())
+            for (let i in connections) {
+                console.log("sending message to:  ", splittedMessage[1] )
+                connections[i].send(splittedMessage[1] + ":" + splittedMessage[2])
+              }
+              
+        }
+        
+
+
+        
     })
 })
         

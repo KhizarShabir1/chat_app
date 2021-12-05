@@ -26,28 +26,62 @@
 
             <button type="button" onclick="myFunction()">Submit</button>
           </form> 
+
+          <br><br>
+          <br><br>
+
+          <form>
+            <label for="message">Message: </label>
+            <input   id="message" type="text" name="message"  >
+            <br><br>
+
+            <button type="button" onclick="sendMessage()">Send Message</button>
+          </form>
+
+          <br><br>
+          <br><br>
+
+          <label for="list">Chat Messages: </label>
+          <ul id="list"></ul>
           
         <script>
+            const messages = [];
+            var myName = "";
             const ws = new WebSocket("ws://localhost:3000")
+            const list  = document.getElementById("list");
+
 
             function myFunction() {
                 sendConnection(ws)
             }
+            function sendMessage(){
+                var message = document.getElementById("message").value
+                ws.send("message" + ':' + myName + ':' +message)
+            }
 
             function sendConnection(ws){
                         var name = document.getElementById("fname").value
+                        myName = name // saving the name of the message sender
                         var select = document.getElementById("locale")
                         var locale = select.options[select.selectedIndex].value
                         console.log(name + locale)
-                        ws.send(name +':'+locale)
+                        ws.send("connection" + ':' + name + ':'+locale)
                     }
+
             
-            ws.onopen = () => document.getElementById("sendConnection").onclick = sendConnection(ws)
             
             //document.getElementById("sendConnection").onclick = sendConnection(ws)
             // when there is an incoming message
+            function displayMessages(msg){
+                console.log(msg)
+                messages.push(msg)
+                
+                document.getElementById("list").innerHTML = messages.map(i => `<li>${i}</li>`).join('');
+                
+            }
             
-            ws.onmessage = (msg) => console.log("message from the server: ", msg.data)
+            ws.onmessage = (msg) => displayMessages(msg.data)
+
 
         </script>
     </body>
