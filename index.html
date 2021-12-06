@@ -1,88 +1,81 @@
 <!DOCTYPE html>
 
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title> Client</title>
-    </head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Client</title>
+  </head>
 
-    <body>
-        <form >
-            <label for="fname">Name: </label>
-            <input   id="fname" type="text" name="fname" value="John" >
-            
-            <br><br>
-            <label for="lname">Locale: </label>
+  <body>
+    <h2>Step 1: Make a connection with server</h2>
+    <form>
+      <label for="fname">Name: </label>
+      <input id="fname" type="text" name="fname" value="John" />
 
-            <select name = "dropdown" id="locale">
-                <option value = "English" >English</option>
-                <option value = "German" selected>German</option>
-                <option value = "Spanish">Spanish</option>
+      <br /><br />
+      <label for="lname">Locale: </label>
 
-             </select>
+      <select name="dropdown" id="locale">
+        <option value="EN">English</option>
+        <option value="DE" selected>German</option>
+        <option value="ES">Spanish</option>
+      </select>
 
-             <br><br>
+      <br /><br />
 
+      <button type="button" onclick="myFunction()">Send Connection</button>
+    </form>
 
-            <button type="button" onclick="myFunction()">Submit</button>
-          </form> 
+    <br /><br />
+    <h2>Step 2: Broadcast messages to all clients attached with server</h2>
 
-          <br><br>
-          <br><br>
+    <form>
+      <label for="message">Message: </label>
+      <input id="message" type="text" name="message" />
+      <br /><br />
 
-          <form>
-            <label for="message">Message: </label>
-            <input   id="message" type="text" name="message"  >
-            <br><br>
+      <button type="button" onclick="sendMessage()">Send Message</button>
+    </form>
 
-            <button type="button" onclick="sendMessage()">Send Message</button>
-          </form>
+    <br /><br />
+    <h2>Chatbox</h2>
+    <label for="list">Chat Messages: </label>
+    <ul id="list"></ul>
 
-          <br><br>
-          <br><br>
+    <script>
+      const messages = []; // arary to store messages
+      var myName = "";
+      const ws = new WebSocket("ws://localhost:3000");
+      const list = document.getElementById("list");
 
-          <label for="list">Chat Messages: </label>
-          <ul id="list"></ul>
-          
-        <script>
-            const messages = [];
-            var myName = "";
-            const ws = new WebSocket("ws://localhost:3000")
-            const list  = document.getElementById("list");
+      function myFunction() {
+        sendConnection(ws);
+      }
 
+      function sendConnection(ws) {
+        var name = document.getElementById("fname").value;
+        myName = name; // saving the name of the message sender
+        var select = document.getElementById("locale");
+        var locale = select.options[select.selectedIndex].value;
+        console.log(name + locale);
+        ws.send("connection" + ":" + name + ":" + locale);
+      }
 
-            function myFunction() {
-                sendConnection(ws)
-            }
-            function sendMessage(){
-                var message = document.getElementById("message").value
-                ws.send("message" + ':' + myName + ':' +message)
-            }
+      function sendMessage() {
+        var message = document.getElementById("message").value;
+        ws.send("message" + ":" + myName + ":" + message);
+      }
+      // displaying incoming messages
+      function displayMessages(msg) {
+        console.log(msg);
 
-            function sendConnection(ws){
-                        var name = document.getElementById("fname").value
-                        myName = name // saving the name of the message sender
-                        var select = document.getElementById("locale")
-                        var locale = select.options[select.selectedIndex].value
-                        console.log(name + locale)
-                        ws.send("connection" + ':' + name + ':'+locale)
-                    }
+        messages.push(msg);
+        document.getElementById("list").innerHTML = messages
+          .map((i) => `<li>${i}</li>`)
+          .join("");
+      }
 
-            
-            
-            //document.getElementById("sendConnection").onclick = sendConnection(ws)
-            // when there is an incoming message
-            function displayMessages(msg){
-                console.log(msg)
-                messages.push(msg)
-                
-                document.getElementById("list").innerHTML = messages.map(i => `<li>${i}</li>`).join('');
-                
-            }
-            
-            ws.onmessage = (msg) => displayMessages(msg.data)
-
-
-        </script>
-    </body>
-    </html>
+      ws.onmessage = (msg) => displayMessages(msg.data);
+    </script>
+  </body>
+</html>
