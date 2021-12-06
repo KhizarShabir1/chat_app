@@ -39,9 +39,12 @@ function returnLocale(lang: number): deepl.DeeplLanguages {
 }
 
 webServer.on("connection", (w) => {
+
   console.log("someone connected");
+
   w.on("message", (msg) => {
     var splittedMessage = msg.toString().split(":");
+
     if (splittedMessage[0] == "connection") {
       connections.push(w);
       names.push(splittedMessage[1]);
@@ -58,6 +61,7 @@ webServer.on("connection", (w) => {
       console.log("got connection: ", msg.toString());
       console.log("Number of connection now: ", connections.length.toString());
     }
+
     if (splittedMessage[0] == "message") {
       console.log("got message: ", msg.toString());
 
@@ -79,6 +83,7 @@ webServer.on("connection", (w) => {
           .catch((error) => {
             console.error(error);
           });
+          
       }
     }
   });
