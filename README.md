@@ -1,4 +1,4 @@
-# chat_app
+# websocket server-client chat application
 
 
 Please run the application by running:
