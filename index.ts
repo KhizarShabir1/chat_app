@@ -72,7 +72,7 @@ webServer.on("connection", (w) => {
           free_api: true,
           text: splittedMessage[2],
           target_lang: returnLocale(assignedlocales[i]),
-          auth_key: "33b07e7f-4beb-8624-01fc-95eaf3043c29:fx",
+          auth_key: "add-your-auth key-here",
           // All optional parameters available in the official documentation can be defined here as well.
         })
           .then((result) => {
